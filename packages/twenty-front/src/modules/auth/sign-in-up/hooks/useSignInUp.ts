@@ -69,14 +69,16 @@ export const useSignInUp = (form: UseFormReturn<Form>) => {
   const errorMsgUserAlreadyExist = t`An error occurred while checking user existence`;
   const continueWithCredentials = useCallback(async () => {
     if (!form.getValues('email')) {
-      return enqueueErrorSnackBar({
+      enqueueErrorSnackBar({
         message: t`Email is required`,
       });
+      return;
     }
     if (!isCaptchaReady) {
-      return enqueueErrorSnackBar({
+      enqueueErrorSnackBar({
         message: t`Captcha (anti-bot check) is still loading, try again`,
       });
+      throw new Error('Captcha not ready');
     }
     try {
       const token = readCaptchaToken();
@@ -120,9 +122,10 @@ export const useSignInUp = (form: UseFormReturn<Form>) => {
       }
 
       if (!isCaptchaReady) {
-        return enqueueErrorSnackBar({
+        enqueueErrorSnackBar({
           message: t`Captcha (anti-bot check) is still loading, try again`,
         });
+        throw new Error('Captcha not ready');
       }
 
       const token = readCaptchaToken();

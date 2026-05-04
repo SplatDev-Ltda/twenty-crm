@@ -83,7 +83,12 @@ export const SignInUpWithCredentials = ({
     } else if (signInUpStep === SignInUpStep.Password) {
       if (!form.formState.isSubmitting) {
         setShowErrors(true);
-        form.handleSubmit(submitCredentials)();
+        try {
+          await form.handleSubmit(submitCredentials)();
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Sign in submission error:', error);
+        }
       }
     }
   };
